@@ -3,24 +3,13 @@ var db = require("../db");
 module.exports = {
   messages: {
     get: function (res) {
-      db.query('SELECT * from messages', function(err, rows, fields) {
-        if (!err) {
-          res.json({results: rows});
-        } else {
-          console.log('Error while performing Query.');
-        }
+      db.Message.findAll().then(function(messages){
+        res.json({results: messages});
       });
     },
     post: function (data) {
-      db.query("INSERT into messages (username, text, roomname) values (?, ?, ?);", [data.username, data.text, data.room],
-        function(err, rows, fields) {
-        if (!err) {
-          console.log("Row added.");
-        }
-        else {
-          console.log("Error while performing Query.");
-        }
-      });
+      var newMessage = db.Message.build(data);
+      newMessage.save();
     }
   },
 
