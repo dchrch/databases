@@ -1,16 +1,30 @@
-var db = require('../db');
-
-
-
+var db = require("../db");
 
 module.exports = {
   messages: {
-    get: function () {}, // a function which produces all the messages
-    post: function () {} // a function which can be used to insert a message into the database
+    get: function (res) {
+      db.query('SELECT * from messages', function(err, rows, fields) {
+        if (!err) {
+          res.json({results: rows});
+        } else {
+          console.log('Error while performing Query.');
+        }
+      });
+    },
+    post: function (data) {
+      db.query("INSERT into messages (username, text, roomname) values (?, ?, ?);", [data.username, data.text, data.room],
+        function(err, rows, fields) {
+        if (!err) {
+          console.log("Row added.");
+        }
+        else {
+          console.log("Error while performing Query.");
+        }
+      });
+    }
   },
 
   users: {
-    // Ditto as above.
     get: function () {},
     post: function () {}
   }
